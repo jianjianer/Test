@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>测试</title>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    <input type="button" value="测试" id="btn" />
+    <div id="result"></div>
+</body>
+</html>
+<script type="text/javascript">
+    var i = 0;
+    
+    //(function test(){
+    //    setTimeout(test, 200);
+    //    ++i;
+    //    if (i <= 10) {
+    //        var json = { name1: "唐健1", name2: "唐健2" };
+    //        //alert(JSON.stringify(json));
+    //        $.ajax({
+    //            url: "Home/GetData",
+    //            type: "post",
+    //            data: { json: json, count: i },
+    //            async:false,
+    //            success: function (data) {
+    //                if (data != "尖子") {
+    //                    $("#result").append("请求成功！但是已经被重定向了！\n");
+    //                } else {
+    //                    $("#result").append("请求成功！" + i + data + "\n");
+    //                }
+
+    //            },
+    //            error: function (jqXHR, textStatus, errorThrown) {
+    //                //alert(textStatus);
+    //                $("#result").html("请求出错，错误代码为：" + textStatus + "！\n");
+    //                //window.alert("error loading data:" + textStatus + " - " + "\n dsa");
+    //            }
+    //        });
+    //    }
+    //})();
+
+    $(function () {
+        $("#btn").click(function () {
+            $.ajax({
+                url: "Home/GetData",
+                type: "post",
+                data: { count: i },
+                async: false,
+                success: function (data) {
+                    alert(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    //alert(textStatus);
+                    $("#result").html("请求出错，错误代码为：" + textStatus + "！\n");
+                    //window.alert("error loading data:" + textStatus + " - " + "\n dsa");
+                }
+            });
+        })
+
+        $.ajaxSetup({
+            type: "POST",
+            complete: function (xhr, status) {
+                var sessionStatus = xhr.getResponseHeader("sessionstatus");
+                if (sessionStatus == "timeout") {
+                    var top = getTopWinow();
+                    var yes = confirm('由于您长时间没有操作, session已过期, 请重新登录.');
+                    if (yes) {
+                        top.location.href = '/skynk/index.html';
+                    }
+                }
+            }
+        });
+        /**
+     * 在页面中任何嵌套层次的窗口中获取顶层窗口
+     * return 当前页面的顶层窗口对象
+     */
+        function getTopWinow() {
+            var p = window;
+            while (p != p.parent) {
+                p = p.parent;
+            }
+            return p;
+        }
+    }) 
+    //document.write('<table width=770 border=0 cellpadding=0 cellspacing=0><tr><td><img src=../images/f_01.gif border=0 /></td><td><img src=../images/f_02.gif border=0 /></td></tr></table>')
+</script>
